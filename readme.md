@@ -1,7 +1,7 @@
 
 # Integrating Aquasec Trivy in Cloud Native Toolkit for DevSecOps
 
-To ensure the security, as part of the DevSecOps, Vulnerability scanning is done on the images. There are several tools available for image scanning. 
+DevSecOps ensures the security by doing Vulnerability scanning on the container images. There are several tools available for image scanning. 
 
 `Trivy` is a Simple and Comprehensive Vulnerability Scanner for Containers, Suitable for CI.
 
@@ -65,7 +65,7 @@ The pipeline scripts are defined in the `jenkinsfile`. lets us see the changes d
 
 Here is the declaration about the Trivy image in the `containers` section under `podTemplate` in the `jenkinsfile`
 
-<img src="images/04-jenkinsfile-1-declaration.png">
+<img src="images/04-jenkinsfile-1-declaration.png" width="300" >
 
 1. Name `trivy` will be used in the script to refer the trivy container.
 
@@ -150,7 +150,7 @@ The pipeline scripts are defined as Task in the yaml file. lets us see the chang
 
 Here is the declaration about the Trivy image in the `Task`
 
-<img src="images/07-tekton-task-1-declaration.png" >
+<img src="images/07-tekton-task-1-declaration.png"  width="300" >
 
 1. Image details of the `buildah`.
 
