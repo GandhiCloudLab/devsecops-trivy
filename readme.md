@@ -1,7 +1,7 @@
 
-# Integrating DevSecOps Using Aquasec Trivy in Cloud Native Toolkit
+# Integrating Aquasec Trivy in Cloud Native Toolkit for DevSecOps
 
-As part of the DevSecOps, to ensure the security, the images undergo Vulnerability scanning. There are several tools available for image scanning. 
+To ensure the security, as part of the DevSecOps, Vulnerability scanning is done on the images. There are several tools available for image scanning. 
 
 `Trivy` is a Simple and Comprehensive Vulnerability Scanner for Containers, Suitable for CI.
 
@@ -47,40 +47,39 @@ Based on the configured exit criteria (0 Critical) the next step would in the pi
 
 Here is the logs written during the pipeline execution.
 
-<img src="images/03-jenkins-pipeline-trivy-log.png" width="600">
+<img src="images/03-jenkins-pipeline-trivy-log.png" >
 
 
 #### Push Image
 
 After the scan is completed, it Pushes the image to the Image Registry.
 
+<BR></BR>
+<BR></BR>
 
-
-
-The pipeline script defined in the jenkinsfile. lets us see the changes done in the jenkins file.
-
+The pipeline scripts are defined in the `jenkinsfile`. lets us see the changes done in the jenkins file.
 
 # 2. Jenkinsfile Changes
 
 ### Declaration
 
-Here is the declaration about the Trivy image in the `containers` section under `podtemplate`
+Here is the declaration about the Trivy image in the `containers` section under `podTemplate` in the `jenkinsfile`
 
-<img src="images/04-jenkinsfile-1-declaration.png" width="600">
+<img src="images/04-jenkinsfile-1-declaration.png">
 
 1. Name `trivy` will be used in the script to refer the trivy container.
 
 2. The image tag of the `trivy`.
 
-3. The `username` related configmap to connect to IBM Cloud Container registry.
+3. A configmap contains `username` details to connect to IBM Cloud Container registry.
 
-4. The `password` related secrte to connect to IBM Cloud Container registry.
+4. A secrte contains `password` to connect to IBM Cloud Container registry.
 
 ### Build Image
 
 Here are the steps to Build Image.
 
-<img src="images/04-jenkinsfile-2-build.png" width="600">
+<img src="images/04-jenkinsfile-2-build.png" >
 
 1. Temp image name is framed. 
 
@@ -95,19 +94,19 @@ Here are the steps to Build Image.
 
 Here are the steps for trivy Scanning
 
-<img src="images/04-jenkinsfile-3-scan.png" width="600">
+<img src="images/04-jenkinsfile-3-scan.png" >
 
 1. Refers the temp image name created in the previous step. 
 
 2. Registry URL and user details to login into IBM Cloud Container Registry by trivy.
 
-3. Trivy scanning the temp image found in the IBM Cloud Container Registry 
+3. Trivy scanning the temp image found in the IBM Cloud Container Registry.
 
 ### Push Image
 
 Here are the steps for Push Image.
 
-<img src="images/04-jenkinsfile-4-push.png" width="600">
+<img src="images/04-jenkinsfile-4-push.png" >
 
 1. Refers the temp image name created in the previous step. 
 
@@ -115,9 +114,9 @@ Here are the steps for Push Image.
 
 3. Pull the temp image using `buildah`.
 
-4. Tag the image to the right image name.
+4. Tag the image to the actual image name.
 
-5. Push the right image to IBM Cloud Container Registry using `buildah`.
+5. Push the actual image to IBM Cloud Container Registry using `buildah`.
 
 6. Remove the temp image from IBM Cloud Container Registry using `buildah`.
 
@@ -139,7 +138,7 @@ Need to split the step into 3 steps.
 
 Here is the modified pipeline.
 
-<img src="images/06-tekton-pipeline-with-trivy.png" width="600">
+<img src="images/06-tekton-pipeline-with-trivy.png" >
 
 
 The pipeline scripts are defined as Task in the yaml file. lets us see the changes done in the task file.
@@ -149,23 +148,23 @@ The pipeline scripts are defined as Task in the yaml file. lets us see the chang
 
 ### Declaration
 
-Here is the declaration about the Trivy image in the `containers` section under `podtemplate`
+Here is the declaration about the Trivy image in the `Task`
 
-<img src="images/07-tekton-task-1-declaration.png" width="600">
+<img src="images/07-tekton-task-1-declaration.png" >
 
-1. Image details of the of the `buildah`
+1. Image details of the `buildah`.
 
-2. The variable name of for the `buildah`
+2. The variable name of the `buildah`.
 
-3. Image details of the of the `trivy`
+3. Image details of the `trivy`.
 
-4. The variable name of for the `trivy`
+4. The variable name of the `trivy`.
 
 ### Build Image
 
 Here are the steps for Build Image.
 
-<img src="images/07-tekton-task-2-build.png" width="600">
+<img src="images/07-tekton-task-2-build.png" >
 
 1. Temp image name is framed. 
 
@@ -179,11 +178,15 @@ Here are the steps for Build Image.
 
 6. Password details to Login into IBM Cloud Container Registry.
 
+7. Image details reference `buildah` from input param.
+
+8. Name of the step
+
 ### Trivy Scan
 
 Here are the steps for Scanning
 
-<img src="images/07-tekton-task-3-scan.png" width="600">
+<img src="images/07-tekton-task-3-scan.png" >
 
 1. Refers the temp image name created in the previous step. 
 
@@ -193,9 +196,9 @@ Here are the steps for Scanning
 
 4. Password details to Login into IBM Cloud Container Registry.
 
-5. Image details of the of the `trivy`
+5. Image details of the `trivy` from input param.
 
-6. Name of the step
+6. Name of the step.
 
 7. Registry URL and user details to login into IBM Cloud Container Registry by trivy.
 
@@ -204,7 +207,7 @@ Here are the steps for Scanning
 
 Here are the steps for Pushing Image.
 
-<img src="images/07-tekton-task-4-push.png" width="600">
+<img src="images/07-tekton-task-4-push.png" >
 
 1. Refers the image url passed as a parameter. 
 
@@ -214,12 +217,12 @@ Here are the steps for Pushing Image.
 
 4. Pull the temp image using `buildah`.
 
-5. Tag the image to the right image name.
+5. Tag the image to the actual image name.
 
-6. Push the right image to IBM Cloud Container Registry using `buildah`.
+6. Push the actual image to IBM Cloud Container Registry using `buildah`.
 
 7. Remove the temp image from IBM Cloud Container Registry using `buildah`.
 
-8. Image details of the of the `buildah`
+8. Image details of the `buildah` from input param.
 
-9. Name of the step
+9. Name of the step.
